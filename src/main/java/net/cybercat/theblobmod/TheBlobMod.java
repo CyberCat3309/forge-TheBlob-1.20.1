@@ -1,6 +1,9 @@
 package net.cybercat.theblobmod;
 
 import com.mojang.logging.LogUtils;
+import net.cybercat.theblobmod.item.ModCreativeModTabs;
+import net.cybercat.theblobmod.item.ModItems;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -26,6 +29,11 @@ public class TheBlobMod
     public TheBlobMod(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
+
+        ModCreativeModTabs.register(modEventBus);
+
+        ModItems.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
@@ -38,10 +46,11 @@ public class TheBlobMod
 
     }
 
-    // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
-
+    // Add item to the building blocks tab
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(ModItems.BLOBFOOD);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
